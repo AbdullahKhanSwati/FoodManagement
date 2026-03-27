@@ -1,0 +1,49 @@
+{
+  "expo": {
+    "name": "FoodSupport",
+    "slug": "food-support",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#F7FBF8"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTabletMode": true,
+      "bundleIdentifier": "com.foodsupport.app"
+    },
+    "android": {
+      "usesCleartextTraffic": true,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#F7FBF8"
+      },
+      "package": "com.foodsupport.app"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#F7FBF8"
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "69340f88-1927-4449-b04a-6e9c95c35655"
+      }
+    },
+    "owner": "abdullah_khan_swati"
+  }
+}
