@@ -57,6 +57,7 @@ function AddSafeFoodScreen({ navigation, route }) {
 
   const [foodName, setFoodName] = useState(existingFood?.name || '');
   const [description, setDescription] = useState(existingFood?.description || '');
+  const [recipe, setRecipe] = useState(existingFood?.recipe || '');
   const [type, setType] = useState(existingFood?.type || 'solid');
   const [temperature, setTemperature] = useState(existingFood?.temperature || 'warm'); 
   const [loading, setLoading] = useState(false);
@@ -83,6 +84,7 @@ function AddSafeFoodScreen({ navigation, route }) {
       const payload = {
         name: foodName,
         description,
+        recipe,
         type,
         temperature
       };
@@ -140,12 +142,10 @@ function AddSafeFoodScreen({ navigation, route }) {
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.content}>
           <View style={styles.inputContainer}>
-            <Text style={styles.label}>Food description which includes recipes *</Text>
+            <Text style={styles.label}>Food Name *</Text>
             <TextInput
-              style={[styles.input, { height: 80, textAlignVertical: 'top' }]}
-              placeholder="e.g. Oatmeal with berries..."
-              multiline={true}
-              numberOfLines={3}
+              style={styles.input}
+              placeholder="e.g. Oatmeal with berries"
               value={foodName}
               onChangeText={setFoodName}
               placeholderTextColor={colors.secondaryText}
@@ -163,12 +163,25 @@ function AddSafeFoodScreen({ navigation, route }) {
           </View>
 
           <View style={styles.inputContainer}>
-            <Text style={styles.label}>I like this meal because</Text>
+            <Text style={styles.label}>Food description which includes recipes (Optional)</Text>
             <TextInput
               style={[styles.input, { height: 100, textAlignVertical: 'top' }]}
-              placeholder="Why does this meal work for you?"
+              placeholder="Add ingredients, steps, or details here..."
               multiline={true}
               numberOfLines={4}
+              value={recipe}
+              onChangeText={setRecipe}
+              placeholderTextColor={colors.secondaryText}
+            />
+          </View>
+
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>I like this meal because</Text>
+            <TextInput
+              style={[styles.input, { height: 80, textAlignVertical: 'top' }]}
+              placeholder="Why does this meal work for you?"
+              multiline={true}
+              numberOfLines={3}
               value={description}
               onChangeText={setDescription}
               placeholderTextColor={colors.secondaryText}

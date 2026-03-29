@@ -122,7 +122,7 @@ function HomeScreen({ navigation }) {
     View,
     { style: styles.container },
     React.createElement(Header, {
-      title: 'FoodSupport',
+      title: 'Easy Eats',
       onMenuPress: () => navigation.openDrawer(),
     }),
     React.createElement(

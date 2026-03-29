@@ -115,32 +115,34 @@ function SafeFoodDetailScreen({ navigation, route }) {
       />
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.content}>
+          {/* BOX 1: Food Details */}
           <View style={styles.card}>
-            <Text style={styles.label}>FOOD NAME</Text>
             <Text style={styles.value}>{food.name}</Text>
-
-            <Text style={styles.label}>TYPE</Text>
-            <Text style={styles.value}>
-              {food.type}
-            </Text>
-
-            <Text style={styles.label}>TEMPERATURE</Text>
-            <Text style={[styles.value, { marginBottom: food.description ? spacing.lg : 0 }]}>
-              {food.temperature}
-            </Text>
+            
+            <Text style={styles.label}>TYPE: <Text style={{fontWeight: '400', color: colors.primaryText, textTransform: 'capitalize'}}>{food.type}</Text></Text>
+            <Text style={[styles.label, { marginBottom: food.description ? spacing.lg : 0 }]}>TEMPERATURE: <Text style={{fontWeight: '400', color: colors.primaryText, textTransform: 'capitalize'}}>{food.temperature}</Text></Text>
 
             {food.description ? (
               <>
-                <Text style={styles.label}>DESCRIPTION</Text>
+                <Text style={styles.label}>I LIKE THIS MEAL BECAUSE</Text>
                 <Text style={styles.description}>{food.description}</Text>
               </>
             ) : null}
           </View>
 
+          {/* BOX 2: Recipe/Preparation */}
+          {food.recipe ? (
+            <View style={styles.card}>
+              <Text style={styles.label}>RECIPE & PREPARATION</Text>
+              <Text style={styles.description}>{food.recipe}</Text>
+            </View>
+          ) : null}
+
+          {/* CONTROL RINGS */}
           <View style={styles.buttonGroup}>
             <View style={styles.buttonContainer}>
               <Button
-                title="Edit"
+                title="Edit Details"
                 onPress={() => navigation.navigate('AddSafeFood', { isEditing: true, food })}
                 variant="secondary"
                 disabled={deleting}

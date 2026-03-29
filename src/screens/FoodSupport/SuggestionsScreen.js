@@ -100,6 +100,7 @@ function SuggestionsScreen({ navigation, route }) {
       await addSafeFood({
         name: food.name,
         description: food.description,
+        recipe: food.recipe || '',
         type: validTypes.includes(parsedType) ? parsedType : 'unsure',
         temperature: validTemps.includes(parsedTemp) ? parsedTemp : 'warm'
       });
@@ -162,7 +163,7 @@ function SuggestionsScreen({ navigation, route }) {
     View,
     { style: styles.container },
     React.createElement(Header, {
-      title: 'Food Support',
+      title: 'Easy Eats',
       showBack: true,
       onBackPress: () => navigation.goBack(),
     }),

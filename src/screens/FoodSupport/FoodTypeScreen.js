@@ -93,7 +93,7 @@ function FoodTypeScreen({ navigation, route }) {
     View,
     { style: styles.container },
     React.createElement(Header, {
-      title: 'Food Support',
+      title: 'Easy Eats',
       showBack: true,
       onBackPress: () => navigation.goBack(),
     }),
