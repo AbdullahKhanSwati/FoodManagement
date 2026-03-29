@@ -63,7 +63,8 @@ function Button({
   size = 'md', 
   loading = false, 
   disabled = false, 
-  style 
+  style,
+  textStyle
 }) {
   const isOutlineOrSecondary = variant === 'outline' || variant === 'secondary';
   const containerStyle = [
@@ -92,6 +93,7 @@ function Button({
             style: [
               styles.text,
               isOutlineOrSecondary ? styles.secondaryText : styles.primaryText,
+              textStyle
             ],
           },
           title

@@ -52,9 +52,14 @@ const temperatures = [
 ];
 
 function TemperatureScreen({ navigation, route }) {
+  const [page, setPage] = React.useState(0);
+  const itemsPerPage = 3;
   const mealSize = route.params?.mealSize || 'small';
 
-  const options = temperatures.map((temp) =>
+  const currentOptions = temperatures.slice(page * itemsPerPage, (page + 1) * itemsPerPage);
+  const hasMore = (page + 1) * itemsPerPage < temperatures.length;
+
+  const options = currentOptions.map((temp) =>
     React.createElement(QuestionOption, {
       key: temp.id,
       label: temp.label,
@@ -65,6 +70,28 @@ function TemperatureScreen({ navigation, route }) {
       variant: 'chip',
     })
   );
+
+  if (hasMore) {
+    options.push(
+      React.createElement(QuestionOption, {
+        key: 'more',
+        label: 'More...',
+        isSelected: false,
+        onPress: () => setPage(page + 1),
+        variant: 'chip',
+      })
+    );
+  } else if (page > 0) {
+    options.push(
+      React.createElement(QuestionOption, {
+        key: 'prev',
+        label: 'Back...',
+        isSelected: false,
+        onPress: () => setPage(page - 1),
+        variant: 'chip',
+      })
+    );
+  }
 
   return React.createElement(
     View,

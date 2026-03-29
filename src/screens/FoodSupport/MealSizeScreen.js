@@ -43,12 +43,9 @@ const styles = StyleSheet.create({
 });
 
 const mealSizes = [
-  { id: 'snack', label: 'Just a snack' },
-  { id: 'small', label: 'Small plates' },
-  { id: 'grazing', label: 'Grazing' },
-  { id: 'filling', label: 'Filling meal' },
-  { id: 'drinks', label: 'Beverage only' },
-  { id: 'comfort', label: 'Comfort food size' },
+  { id: 'small', label: 'Small' },
+  { id: 'medium', label: 'Medium' },
+  { id: 'large', label: 'Large' },
 ];
 
 function MealSizeScreen({ navigation }) {

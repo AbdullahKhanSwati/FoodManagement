@@ -146,8 +146,10 @@ function BottomTabs() {
     }),
     React.createElement(Tab.Screen, {
       name: 'Profile',
-      component: HomeScreen,
-      options: { title: 'Profile', tabBarLabel: 'Profile' },
+      component: require('../screens/ProfileScreen'),
+      options: { title: 'Profile', tabBarLabel: 'Profile', tabBarIcon: ({ color, size, focused }) => {
+          return React.createElement(Ionicons, { name: focused ? 'person' : 'person-outline', size, color });
+      }},
     })
   );
 }

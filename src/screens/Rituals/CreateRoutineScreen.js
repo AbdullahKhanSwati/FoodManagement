@@ -51,14 +51,14 @@ function CreateRoutineScreen({ navigation }) {
   const [steps, setSteps] = React.useState([]);
   const [isAddingStep, setIsAddingStep] = React.useState(false);
   const [stepText, setStepText] = React.useState('');
-  const [stepTimer, setStepTimer] = React.useState('30');
+  const [stepTimer, setStepTimer] = React.useState('1');
   const [loading, setLoading] = React.useState(false);
 
   const handleSaveStep = () => {
     if (!stepText.trim()) return;
-    setSteps([...steps, { id: Date.now(), stepText, timer: parseInt(stepTimer) || 0 }]);
+    setSteps([...steps, { id: Date.now(), stepText, timer: (parseInt(stepTimer) || 0) * 60 }]);
     setStepText('');
-    setStepTimer('30');
+    setStepTimer('1');
     setIsAddingStep(false);
   };
 
@@ -85,7 +85,7 @@ function CreateRoutineScreen({ navigation }) {
       key: step.id,
       stepNumber: index + 1,
       stepTitle: step.stepText,
-      description: `Timer: ${step.timer}s`,
+      description: `Timer: ${Math.floor(step.timer / 60)}m`,
       onEdit: null,
       onDelete: () => setSteps(steps.filter((s) => s.id !== step.id)),
     })
@@ -130,7 +130,7 @@ function CreateRoutineScreen({ navigation }) {
                 View,
                 { style: styles.stepFormRow },
                 React.createElement(TextInput, { style: [styles.input, { flex: 2 }], placeholder: 'Step Details', value: stepText, onChangeText: setStepText }),
-                React.createElement(TextInput, { style: [styles.input, { flex: 1 }], placeholder: 'Secs (30)', value: stepTimer, onChangeText: setStepTimer, keyboardType: 'numeric' })
+                React.createElement(TextInput, { style: [styles.input, { flex: 1 }], placeholder: 'Mins (1)', value: stepTimer, onChangeText: setStepTimer, keyboardType: 'numeric' })
               ),
               React.createElement(
                 View,

@@ -56,7 +56,7 @@ function CustomDrawerContent(props) {
     React.createElement(
       View,
       { style: styles.drawerHeader },
-      React.createElement(Text, { style: styles.headerTitle }, 'FoodSupport'),
+      React.createElement(Text, { style: styles.headerTitle }, 'Easy Eats'),
       React.createElement(Text, { style: styles.headerSubtitle }, 'Your eating companion')
     ),
     React.createElement(DrawerItemList, props),

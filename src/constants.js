@@ -1,7 +1,7 @@
 const MEAL_SIZES = [
-  { id: 'small', label: 'Small plates' },
-  { id: 'grazing', label: 'Grazing' },
-  { id: 'filling', label: 'Filling meal' },
+  { id: 'small', label: 'Small' },
+  { id: 'medium', label: 'Medium' },
+  { id: 'large', label: 'Large' },
 ];
 
 const TEMPERATURES = [
@@ -12,9 +12,10 @@ const TEMPERATURES = [
 ];
 
 const FOOD_TYPES = [
-  { id: 'liquid', label: 'Liquid' },
-  { id: 'solid', label: 'Solid' },
-  { id: 'unsure', label: 'Unsure' },
+  { id: 'grazing', label: 'Grazing' },
+  { id: 'snacks', label: 'Snacks' },
+  { id: 'liquids', label: 'Liquids' },
+  { id: 'unsure', label: "I don't mind" },
 ];
 
 const FOOD_CATEGORIES = [

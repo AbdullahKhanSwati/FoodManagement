@@ -43,16 +43,22 @@ const styles = StyleSheet.create({
 });
 
 const foodTypes = [
-  { id: 'liquid', label: 'Liquid' },
-  { id: 'solid', label: 'Solid' },
-  { id: 'unsure', label: 'Unsure' },
+  { id: 'grazing', label: 'Grazing' },
+  { id: 'snacks', label: 'Snacks' },
+  { id: 'liquids', label: 'Liquids' },
+  { id: 'unsure', label: "I don't mind" },
 ];
 
 function FoodTypeScreen({ navigation, route }) {
+  const [page, setPage] = React.useState(0);
+  const itemsPerPage = 3;
   const mealSize = route.params?.mealSize || 'small';
   const selectedTemp = route.params?.selectedTemp || 'none';
 
-  const options = foodTypes.map((type) =>
+  const currentOptions = foodTypes.slice(page * itemsPerPage, (page + 1) * itemsPerPage);
+  const hasMore = (page + 1) * itemsPerPage < foodTypes.length;
+
+  const options = currentOptions.map((type) =>
     React.createElement(QuestionOption, {
       key: type.id,
       label: type.label,
@@ -62,6 +68,26 @@ function FoodTypeScreen({ navigation, route }) {
       },
     })
   );
+
+  if (hasMore) {
+    options.push(
+      React.createElement(QuestionOption, {
+        key: 'more',
+        label: 'More options...',
+        isSelected: false,
+        onPress: () => setPage(page + 1),
+      })
+    );
+  } else if (page > 0) {
+    options.push(
+      React.createElement(QuestionOption, {
+        key: 'prev',
+        label: 'Previous options...',
+        isSelected: false,
+        onPress: () => setPage(page - 1),
+      })
+    );
+  }
 
   return React.createElement(
     View,

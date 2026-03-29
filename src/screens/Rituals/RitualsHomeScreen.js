@@ -112,6 +112,32 @@ function RitualsHomeScreen({ navigation }) {
             onPress: () => navigation.navigate('EditRoutine', { routine }),
           },
           React.createElement(Text, { style: [styles.smallButtonText, { color: colors.primary }] }, 'Edit')
+        ),
+        React.createElement(
+          TouchableOpacity,
+          {
+            style: [styles.smallButton, { backgroundColor: '#ffebe6' }],
+            onPress: () => {
+              const { Alert } = require('react-native');
+              const { deleteRoutine } = require('../../api/routineApi');
+              Alert.alert('Delete Routine', 'Are you sure you want to delete this routine?', [
+                { text: 'Cancel', style: 'cancel' },
+                { text: 'Delete', style: 'destructive', onPress: async () => {
+                    setLoading(true);
+                    try {
+                      await deleteRoutine(routine._id);
+                      setRoutines((prev) => prev.filter(r => r._id !== routine._id));
+                    } catch (error) {
+                      console.error(error);
+                      Alert.alert('Error', 'Failed to delete routine.');
+                    } finally {
+                      setLoading(false);
+                    }
+                }}
+              ]);
+            },
+          },
+          React.createElement(Text, { style: [styles.smallButtonText, { color: colors.error }] }, 'Delete')
         )
       )
     );

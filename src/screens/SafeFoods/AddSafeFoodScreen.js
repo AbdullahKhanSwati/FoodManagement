@@ -140,10 +140,12 @@ function AddSafeFoodScreen({ navigation, route }) {
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.content}>
           <View style={styles.inputContainer}>
-            <Text style={styles.label}>Food Name *</Text>
+            <Text style={styles.label}>Food description which includes recipes *</Text>
             <TextInput
-              style={styles.input}
-              placeholder="Enter food name"
+              style={[styles.input, { height: 80, textAlignVertical: 'top' }]}
+              placeholder="e.g. Oatmeal with berries..."
+              multiline={true}
+              numberOfLines={3}
               value={foodName}
               onChangeText={setFoodName}
               placeholderTextColor={colors.secondaryText}
@@ -161,10 +163,10 @@ function AddSafeFoodScreen({ navigation, route }) {
           </View>
 
           <View style={styles.inputContainer}>
-            <Text style={styles.label}>Description</Text>
+            <Text style={styles.label}>I like this meal because</Text>
             <TextInput
               style={[styles.input, { height: 100, textAlignVertical: 'top' }]}
-              placeholder="How does it make you feel? (Optional)"
+              placeholder="Why does this meal work for you?"
               multiline={true}
               numberOfLines={4}
               value={description}
