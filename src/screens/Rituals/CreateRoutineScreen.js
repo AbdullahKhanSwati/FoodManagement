@@ -56,7 +56,7 @@ function CreateRoutineScreen({ navigation }) {
 
   const handleSaveStep = () => {
     if (!stepText.trim()) return;
-    setSteps([...steps, { id: Date.now(), stepText, timer: (parseInt(stepTimer) || 0) * 60 }]);
+    setSteps([...steps, { id: Date.now(), stepText, timer: (parseInt(stepTimer) || 0) }]);
     setStepText('');
     setStepTimer('1');
     setIsAddingStep(false);
@@ -85,7 +85,7 @@ function CreateRoutineScreen({ navigation }) {
       key: step.id,
       stepNumber: index + 1,
       stepTitle: step.stepText,
-      description: `Timer: ${Math.floor(step.timer / 60)}m`,
+      description: `Timer: ${step.timer}m`,
       onEdit: null,
       onDelete: () => setSteps(steps.filter((s) => s.id !== step.id)),
     })

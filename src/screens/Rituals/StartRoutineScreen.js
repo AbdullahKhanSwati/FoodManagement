@@ -1,5 +1,5 @@
 const React = require('react');
-const { View, Text, StyleSheet, ScrollView, TouchableOpacity } = require('react-native');
+const { View, Text, StyleSheet, ScrollView } = require('react-native');
 const Header = require('../../components/Header');
 const Button = require('../../components/Button');
 const colors = require('../../theme/colors');
@@ -60,19 +60,26 @@ const styles = StyleSheet.create({
 
 function StartRoutineScreen({ navigation, route }) {
   const routine = route.params?.routine || { name: 'Routine', steps: [] };
-  const steps = Array.isArray(routine.steps) ? routine.steps : [];
+  const steps = React.useMemo(() => Array.isArray(routine.steps) ? routine.steps : [], [routine.steps]);
   const totalSteps = steps.length || 0;
   
   const [currentStep, setCurrentStep] = React.useState(1);
   const [timeLeft, setTimeLeft] = React.useState(0);
 
+  // Format seconds to mm:ss
+  const formatTime = (totalSeconds) => {
+    const m = Math.floor(totalSeconds / 60);
+    const s = totalSeconds % 60;
+    return `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+  };
+
   // Initialize timer when step changes
   React.useEffect(() => {
     if (steps.length > 0 && currentStep <= steps.length) {
       const stepData = steps[currentStep - 1];
-      setTimeLeft(stepData.timer || 0);
+      setTimeLeft((stepData.timer || 0) * 60);
     } else {
-      setTimeLeft(30); // fallback
+      setTimeLeft(30 * 60); // fallback
     }
   }, [currentStep, steps]);
 
@@ -110,8 +117,7 @@ function StartRoutineScreen({ navigation, route }) {
         React.createElement(
           View,
           { style: styles.timerContainer },
-          React.createElement(Text, { style: styles.timer }, timeLeft),
-          React.createElement(Text, { style: styles.timerLabel }, 'seconds')
+          React.createElement(Text, { style: styles.timer }, formatTime(timeLeft))
         ),
         React.createElement(
           View,

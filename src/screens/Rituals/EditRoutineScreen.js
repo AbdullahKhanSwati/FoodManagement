@@ -69,12 +69,12 @@ function EditRoutineScreen({ navigation, route }) {
   // Add Step State
   const [isAddingStep, setIsAddingStep] = React.useState(false);
   const [newStepText, setNewStepText] = React.useState('');
-  const [newStepTimer, setNewStepTimer] = React.useState('30');
+  const [newStepTimer, setNewStepTimer] = React.useState('1');
 
   // Edit Step State
   const [editingStepIndex, setEditingStepIndex] = React.useState(null);
   const [editingStepText, setEditingStepText] = React.useState('');
-  const [editingStepTimer, setEditingStepTimer] = React.useState('30');
+  const [editingStepTimer, setEditingStepTimer] = React.useState('1');
 
   const handleSaveRoutineName = async () => {
     if (!routineName.trim()) return;
@@ -101,7 +101,7 @@ function EditRoutineScreen({ navigation, route }) {
         setSteps(res.data?.steps || res.data?.data?.steps || []);
         setIsAddingStep(false);
         setNewStepText('');
-        setNewStepTimer('30');
+        setNewStepTimer('1');
       }
     } catch (error) {
       console.error(error);
@@ -176,7 +176,7 @@ function EditRoutineScreen({ navigation, route }) {
         View,
         { style: styles.stepFormRow },
         React.createElement(TextInput, { style: [styles.input, { flex: 2 }], placeholder: 'Step Details', value: text, onChangeText: setText }),
-        React.createElement(TextInput, { style: [styles.input, { flex: 1 }], placeholder: 'Secs', value: timer, onChangeText: setTimer, keyboardType: 'numeric' })
+        React.createElement(TextInput, { style: [styles.input, { flex: 1 }], placeholder: 'Mins', value: timer, onChangeText: setTimer, keyboardType: 'numeric' })
       ),
       React.createElement(
         View,
@@ -225,7 +225,7 @@ function EditRoutineScreen({ navigation, route }) {
               key: index,
               stepNumber: index + 1,
               stepTitle: step.stepText || 'Unknown Step',
-              description: step.timer ? 'Timer: ' + step.timer + 's' : 'No timer',
+              description: step.timer ? 'Timer: ' + step.timer + 'm' : 'No timer',
               onEdit: () => startEditStep(step, index),
               onDelete: () => handleDeleteStep(index),
             });
