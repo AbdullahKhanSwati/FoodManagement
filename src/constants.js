@@ -101,7 +101,7 @@ const DRAWER_MENU_ITEMS = [
   { id: 'home', label: 'Home' },
   { id: 'food-support', label: 'Food Support' },
   { id: 'safe-foods', label: 'Safe Foods' },
-  { id: 'rituals', label: 'Rituals & Routines' },
+  { id: 'rituals', label: 'Food Routines & Rituals' },
   { id: 'journal', label: 'Journal' },
   { id: 'community', label: 'Community' },
 ];

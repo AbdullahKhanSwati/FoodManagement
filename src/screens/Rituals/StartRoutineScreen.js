@@ -1,5 +1,7 @@
 const React = require('react');
-const { View, Text, StyleSheet, ScrollView } = require('react-native');
+const { View, Text, StyleSheet, ScrollView, AppState, Platform } = require('react-native');
+const Notifications = require('expo-notifications');
+const { Audio } = require('expo-av');
 const Header = require('../../components/Header');
 const Button = require('../../components/Button');
 const colors = require('../../theme/colors');
@@ -65,6 +67,83 @@ function StartRoutineScreen({ navigation, route }) {
   
   const [currentStep, setCurrentStep] = React.useState(1);
   const [timeLeft, setTimeLeft] = React.useState(0);
+  const [isRunning, setIsRunning] = React.useState(false);
+  const endTimeRef = React.useRef(null);
+  const appState = React.useRef(AppState.currentState);
+  const notificationIdRef = React.useRef(null);
+  
+  const [isAlarmRinging, setIsAlarmRinging] = React.useState(false);
+  const soundRef = React.useRef(null);
+
+  React.useEffect(() => {
+    (async () => {
+      if (Platform.OS === 'android') {
+        await Notifications.setNotificationChannelAsync('default', {
+          name: 'default',
+          importance: Notifications.AndroidImportance.MAX,
+          vibrationPattern: [0, 250, 250, 250],
+          lightColor: '#FF231F7C',
+        });
+      }
+
+      const { status: existingStatus } = await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+      if (existingStatus !== 'granted') {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+      }
+      if (finalStatus !== 'granted') {
+        alert('Please enable notifications in your phone settings to hear background alarms!');
+      }
+    })();
+    return () => {
+      stopAlarm();
+    };
+  }, []);
+
+  const playAlarm = async () => {
+    if (isAlarmRinging) return;
+    setIsAlarmRinging(true);
+    try {
+      const { sound } = await Audio.Sound.createAsync(
+        { uri: 'https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg' },
+        { shouldPlay: true, isLooping: true }
+      );
+      soundRef.current = sound;
+    } catch (e) {
+      console.log('Error playing alarm:', e);
+    }
+  };
+
+  const stopAlarm = async () => {
+    setIsAlarmRinging(false);
+    if (soundRef.current) {
+      await soundRef.current.stopAsync();
+      await soundRef.current.unloadAsync();
+      soundRef.current = null;
+    }
+  };
+
+  const cancelNotification = async () => {
+    if (notificationIdRef.current) {
+      await Notifications.cancelScheduledNotificationAsync(notificationIdRef.current);
+      notificationIdRef.current = null;
+    }
+  };
+
+  const scheduleNotification = async (seconds) => {
+    await cancelNotification();
+    if (seconds <= 0) return;
+    const id = await Notifications.scheduleNotificationAsync({
+      content: {
+        title: "Step Completed!",
+        body: "Time is up for the current step.",
+        sound: true,
+      },
+      trigger: { seconds },
+    });
+    notificationIdRef.current = id;
+  };
 
   // Format seconds to mm:ss
   const formatTime = (totalSeconds) => {
@@ -81,20 +160,77 @@ function StartRoutineScreen({ navigation, route }) {
     } else {
       setTimeLeft(30 * 60); // fallback
     }
+    setIsRunning(false);
+    endTimeRef.current = null;
+    cancelNotification();
+    stopAlarm();
   }, [currentStep, steps]);
 
+  // Handle precise background time calculation immediately upon foregrounding 
   React.useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft((t) => (t > 0 ? t - 1 : 0));
-    }, 1000);
+    const subscription = AppState.addEventListener('change', nextAppState => {
+      if (appState.current.match(/inactive|background/) && nextAppState === 'active') {
+        if (isRunning && endTimeRef.current) {
+          const remaining = Math.max(0, Math.floor((endTimeRef.current - Date.now()) / 1000));
+          setTimeLeft(remaining);
+          if (remaining <= 0) {
+            setIsRunning(false);
+            endTimeRef.current = null;
+            playAlarm();
+          }
+        }
+      }
+      appState.current = nextAppState;
+    });
+    return () => subscription.remove();
+  }, [isRunning]);
+
+  // Timer interval using fixed end time
+  React.useEffect(() => {
+    let timer;
+    if (isRunning) {
+      if (!endTimeRef.current) {
+        endTimeRef.current = Date.now() + timeLeft * 1000;
+      }
+      timer = setInterval(() => {
+        if (endTimeRef.current) {
+          const remaining = Math.max(0, Math.floor((endTimeRef.current - Date.now()) / 1000));
+          setTimeLeft(remaining);
+          if (remaining <= 0) {
+            clearInterval(timer);
+            setIsRunning(false);
+            endTimeRef.current = null;
+            playAlarm();
+          }
+        }
+      }, 1000);
+    }
     return () => clearInterval(timer);
-  }, []);
+  }, [isRunning, timeLeft]);
 
   const handleNext = () => {
     if (currentStep < totalSteps) {
       setCurrentStep(currentStep + 1);
     } else {
       navigation.goBack();
+    }
+  };
+
+  const toggleTimer = () => {
+    if (isAlarmRinging) {
+      stopAlarm();
+      return;
+    }
+    
+    if (isRunning) {
+      setIsRunning(false);
+      endTimeRef.current = null;
+      cancelNotification();
+    } else {
+      if (timeLeft > 0) {
+        setIsRunning(true);
+        scheduleNotification(timeLeft);
+      }
     }
   };
 
@@ -127,6 +263,15 @@ function StartRoutineScreen({ navigation, route }) {
         React.createElement(
           View,
           { style: styles.buttonGroup },
+          React.createElement(
+            View,
+            { style: styles.buttonWrapper },
+            React.createElement(Button, {
+              title: isAlarmRinging ? 'Stop Alarm' : isRunning ? 'Pause' : 'Start',
+              onPress: toggleTimer,
+              variant: isAlarmRinging ? 'primary' : 'secondary',
+            })
+          ),
           React.createElement(
             View,
             { style: styles.buttonWrapper },

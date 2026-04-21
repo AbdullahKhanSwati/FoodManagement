@@ -6,6 +6,7 @@ const Button = require('../../components/Button');
 const colors = require('../../theme/colors');
 const { spacing, borderRadius, shadows } = require('../../theme/spacing');
 const { getRoutines } = require('../../api/routineApi');
+const { MaterialIcons } = require('@expo/vector-icons');
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.softBackground },
@@ -80,14 +81,12 @@ function RitualsHomeScreen({ navigation }) {
   );
 
   const routineCards = routines.map((routine, index) => {
-    // Alternate icons if not provided by backend
-    const icon = index % 2 === 0 ? '☀️' : '🌙'; 
     const stepsCount = routine.steps ? routine.steps.length : 0;
 
     return React.createElement(
       View,
       { key: routine._id, style: styles.routineCard },
-      React.createElement(Text, { style: styles.routineIcon }, icon),
+      React.createElement(MaterialIcons, { name: 'list-alt', size: 32, color: colors.primary, style: { marginRight: spacing.lg } }),
       React.createElement(
         View,
         { style: styles.routineInfo },
@@ -147,7 +146,7 @@ function RitualsHomeScreen({ navigation }) {
     View,
     { style: styles.container },
     React.createElement(Header, {
-      title: 'Rituals & Routines',
+      title: 'Food Routines & Rituals',
       onMenuPress: () => navigation.openDrawer(),
     }),
     React.createElement(

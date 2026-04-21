@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { getToken, setToken, setUserData, getUserData, clearAuthInfo } from '../utils/storage';
-import { login, register, getProfile } from '../api/auth';
+import { login, register, getProfile, deleteAccount } from '../api/auth';
 
 export const AuthContext = createContext();
 
@@ -77,8 +77,21 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
+  const deleteAccountAction = async () => {
+    try {
+      const response = await deleteAccount();
+      if (response.success) {
+        await logout();
+        return { success: true };
+      }
+      return { success: false, message: response.message || 'Account deletion failed' };
+    } catch (error) {
+      return { success: false, message: error.message || 'Account deletion failed' };
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, isLoading, loginUser, registerUser, logout }}>
+    <AuthContext.Provider value={{ user, isLoading, loginUser, registerUser, logout, deleteAccountAction }}>
       {children}
     </AuthContext.Provider>
   );

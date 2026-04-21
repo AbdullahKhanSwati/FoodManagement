@@ -182,7 +182,7 @@ function HomeScreen({ navigation }) {
               { style: styles.cardIconContainer },
               React.createElement(Text, { style: styles.cardIcon }, '☀️')
             ),
-            React.createElement(Text, { style: styles.cardTitle }, 'Rituals & Routines'),
+            React.createElement(Text, { style: styles.cardTitle }, 'Food Routines & Rituals'),
             React.createElement(Text, { style: styles.cardDescription }, 'Create calming routines around meals to help structure your day.'),
             React.createElement(Button, { title: 'Explore', onPress: handleRitualsPress, variant: 'primary' })
           )

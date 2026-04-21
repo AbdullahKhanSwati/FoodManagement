@@ -30,3 +30,12 @@ export const getProfile = async () => {
     throw error.response?.data || { message: 'Network Error', success: false };
   }
 };
+
+export const deleteAccount = async () => {
+  try {
+    const response = await apiClient.delete('/users/delete-account');
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { message: 'Network Error', success: false };
+  }
+};

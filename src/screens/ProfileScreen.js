@@ -4,8 +4,10 @@ const {
   Text,
   StyleSheet,
   ScrollView,
+  Alert,
 } = require('react-native');
 const Header = require('../components/Header');
+const Button = require('../components/Button');
 const colors = require('../theme/colors');
 const { spacing, borderRadius, shadows } = require('../theme/spacing');
 const { AuthContext } = require('../context/AuthContext');
@@ -80,7 +82,7 @@ const styles = StyleSheet.create({
 });
 
 function ProfileScreen({ navigation }) {
-  const { user } = React.useContext(AuthContext);
+  const { user, deleteAccountAction } = React.useContext(AuthContext);
   const userName = user?.name || 'User';
   const initial = userName.charAt(0).toUpperCase();
 
@@ -119,6 +121,34 @@ function ProfileScreen({ navigation }) {
             { style: styles.infoRow },
             React.createElement(Text, { style: styles.infoLabel }, 'Status'),
             React.createElement(Text, { style: styles.infoValue }, 'Active')
+          ),
+          React.createElement(
+            View,
+            { style: { marginTop: spacing.xl, width: '100%' } },
+            React.createElement(Button, {
+              title: 'Delete Account',
+              onPress: () => {
+                Alert.alert(
+                  'Delete Account',
+                  'Are you sure you want to delete your account? This cannot be undone.',
+                  [
+                    { text: 'Cancel', style: 'cancel' },
+                    { 
+                      text: 'Delete', 
+                      style: 'destructive',
+                      onPress: async () => {
+                        const res = await deleteAccountAction();
+                        if (!res.success) {
+                          Alert.alert('Error', res.message || 'Failed to delete account.');
+                        }
+                      }
+                    }
+                  ]
+                );
+              },
+              variant: 'primary',
+              style: { backgroundColor: colors.error }
+            })
           )
         )
       )
