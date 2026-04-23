@@ -47,9 +47,15 @@ const styles = StyleSheet.create({
 
 const { AuthContext } = require('../context/AuthContext');
 
+const { getFocusedRouteNameFromRoute } = require('@react-navigation/native');
+
 function CustomDrawerContent(props) {
   const { logout } = React.useContext(AuthContext);
   
+  // Get active route name from the nested BottomTabs
+  const currentRoute = props.state.routes[props.state.index];
+  const activeTabName = getFocusedRouteNameFromRoute(currentRoute) ?? 'HomeTab';
+
   return React.createElement(
     DrawerContentScrollView,
     props,
@@ -59,20 +65,32 @@ function CustomDrawerContent(props) {
       React.createElement(Text, { style: styles.headerTitle }, 'Easy Eats'),
       React.createElement(Text, { style: styles.headerSubtitle }, 'Your eating companion')
     ),
-    React.createElement(DrawerItemList, props),
+    React.createElement(DrawerItem, {
+      label: 'Home',
+      labelStyle: styles.drawerItemLabel,
+      focused: activeTabName === 'HomeTab',
+      activeTintColor: colors.primary,
+      onPress: () => props.navigation.navigate('MainTabs', { screen: 'HomeTab' }),
+    }),
     React.createElement(DrawerItem, {
       label: 'Get a Suggestion',
       labelStyle: styles.drawerItemLabel,
+      focused: activeTabName === 'FoodSupport',
+      activeTintColor: colors.primary,
       onPress: () => props.navigation.navigate('MainTabs', { screen: 'FoodSupport' }),
     }),
     React.createElement(DrawerItem, {
       label: 'Safe Foods',
       labelStyle: styles.drawerItemLabel,
+      focused: activeTabName === 'SafeFoods',
+      activeTintColor: colors.primary,
       onPress: () => props.navigation.navigate('MainTabs', { screen: 'SafeFoods' }),
     }),
     React.createElement(DrawerItem, {
       label: 'Routines',
       labelStyle: styles.drawerItemLabel,
+      focused: activeTabName === 'Rituals',
+      activeTintColor: colors.primary,
       onPress: () => props.navigation.navigate('MainTabs', { screen: 'Rituals' }),
     }),
     React.createElement(DrawerItem, {

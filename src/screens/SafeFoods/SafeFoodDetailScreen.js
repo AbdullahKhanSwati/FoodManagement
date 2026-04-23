@@ -120,7 +120,8 @@ function SafeFoodDetailScreen({ navigation, route }) {
             <Text style={styles.value}>{food.name}</Text>
             
             <Text style={styles.label}>TYPE: <Text style={{fontWeight: '400', color: colors.primaryText, textTransform: 'capitalize'}}>{food.type}</Text></Text>
-            <Text style={[styles.label, { marginBottom: food.description ? spacing.lg : 0 }]}>TEMPERATURE: <Text style={{fontWeight: '400', color: colors.primaryText, textTransform: 'capitalize'}}>{food.temperature}</Text></Text>
+            <Text style={styles.label}>TEMPERATURE: <Text style={{fontWeight: '400', color: colors.primaryText, textTransform: 'capitalize'}}>{food.temperature}</Text></Text>
+            <Text style={[styles.label, { marginBottom: food.description ? spacing.lg : 0 }]}>MEAL SIZE: <Text style={{fontWeight: '400', color: colors.primaryText, textTransform: 'capitalize'}}>{food.mealSize || 'Medium'}</Text></Text>
 
             {food.description ? (
               <>

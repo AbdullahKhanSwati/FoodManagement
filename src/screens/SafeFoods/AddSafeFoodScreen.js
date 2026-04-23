@@ -50,6 +50,7 @@ const styles = StyleSheet.create({
 
 const TYPES = ["liquid", "solid", "unsure"];
 const TEMPERATURES = ["hot", "cold", "warm", "frozen"];
+const MEAL_SIZES = ["small", "medium", "large"];
 
 function AddSafeFoodScreen({ navigation, route }) {
   const isEditing = route.params?.isEditing;
@@ -59,7 +60,8 @@ function AddSafeFoodScreen({ navigation, route }) {
   const [description, setDescription] = useState(existingFood?.description || '');
   const [recipe, setRecipe] = useState(existingFood?.recipe || '');
   const [type, setType] = useState(existingFood?.type || 'solid');
-  const [temperature, setTemperature] = useState(existingFood?.temperature || 'warm'); 
+  const [temperature, setTemperature] = useState(existingFood?.temperature || 'warm');
+  const [mealSize, setMealSize] = useState(existingFood?.mealSize || 'medium');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -86,7 +88,8 @@ function AddSafeFoodScreen({ navigation, route }) {
         description,
         recipe,
         type,
-        temperature
+        temperature,
+        mealSize,
       };
 
       let result;
@@ -160,6 +163,11 @@ function AddSafeFoodScreen({ navigation, route }) {
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Temperature *</Text>
             {renderOptions(TEMPERATURES, temperature, setTemperature)}
+          </View>
+
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Meal Size</Text>
+            {renderOptions(MEAL_SIZES, mealSize, setMealSize)}
           </View>
 
           <View style={styles.inputContainer}>
