@@ -7,6 +7,19 @@ const Button = require('../../components/Button');
 const colors = require('../../theme/colors');
 const { spacing, borderRadius, shadows } = require('../../theme/spacing');
 
+const ROUTINE_CHANNEL_ID = 'routine-alarm';
+
+// Ensure notifications are shown (with sound) even when the app is foregrounded,
+// and always delivered loudly when backgrounded.
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldPlaySound: true,
+    shouldShowBanner: true,
+    shouldShowList: true,
+    shouldSetBadge: false,
+  }),
+});
+
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.softBackground },
   content: { padding: spacing.lg, paddingTop: spacing.xl, alignItems: 'center' },
@@ -78,11 +91,14 @@ function StartRoutineScreen({ navigation, route }) {
   React.useEffect(() => {
     (async () => {
       if (Platform.OS === 'android') {
-        await Notifications.setNotificationChannelAsync('default', {
-          name: 'default',
+        await Notifications.setNotificationChannelAsync(ROUTINE_CHANNEL_ID, {
+          name: 'Routine Step Alarms',
           importance: Notifications.AndroidImportance.MAX,
-          vibrationPattern: [0, 250, 250, 250],
+          sound: 'default',
+          vibrationPattern: [0, 500, 250, 500, 250, 500],
+          enableVibrate: true,
           lightColor: '#FF231F7C',
+          lockscreenVisibility: Notifications.AndroidNotificationVisibility.PUBLIC,
         });
       }
 
@@ -98,6 +114,7 @@ function StartRoutineScreen({ navigation, route }) {
     })();
     return () => {
       stopAlarm();
+      cancelNotification();
     };
   }, []);
 
@@ -134,13 +151,25 @@ function StartRoutineScreen({ navigation, route }) {
   const scheduleNotification = async (seconds) => {
     await cancelNotification();
     if (seconds <= 0) return;
+    const stepName =
+      steps.length > 0 && steps[currentStep - 1]?.stepText
+        ? steps[currentStep - 1].stepText
+        : `Step ${currentStep}`;
     const id = await Notifications.scheduleNotificationAsync({
       content: {
-        title: "Step Completed!",
-        body: "Time is up for the current step.",
-        sound: true,
+        title: 'Step Completed!',
+        body: `Time is up for "${stepName}". Tap to continue your routine.`,
+        sound: 'default',
+        priority: Notifications.AndroidNotificationPriority?.MAX,
+        vibrate: [0, 500, 250, 500, 250, 500],
+        data: { routineId: routine?._id, step: currentStep },
       },
-      trigger: { seconds },
+      trigger: {
+        type: 'timeInterval',
+        seconds,
+        repeats: false,
+        channelId: ROUTINE_CHANNEL_ID,
+      },
     });
     notificationIdRef.current = id;
   };
@@ -176,6 +205,7 @@ function StartRoutineScreen({ navigation, route }) {
           if (remaining <= 0) {
             setIsRunning(false);
             endTimeRef.current = null;
+            cancelNotification();
             playAlarm();
           }
         }
@@ -200,6 +230,7 @@ function StartRoutineScreen({ navigation, route }) {
             clearInterval(timer);
             setIsRunning(false);
             endTimeRef.current = null;
+            cancelNotification();
             playAlarm();
           }
         }
