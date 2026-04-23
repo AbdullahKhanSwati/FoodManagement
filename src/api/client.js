@@ -32,7 +32,7 @@
 import axios from 'axios';
 import { getToken } from '../utils/storage';
 
-const BASE_URL = 'https://food-support-ten.vercel.app/api/v1'; // ← Changed to .3, which is your actual PC's IP. .1 is your router!
+const BASE_URL = 'https://food-support-ten.vercel.app/api/v1';
 
 const apiClient = axios.create({
   baseURL: BASE_URL,
@@ -49,7 +49,30 @@ apiClient.interceptors.request.use(
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => {
+    console.error('[API] Request setup error:', error.message);
+    return Promise.reject(error);
+  }
+);
+
+apiClient.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const status = error.response?.status;
+    const url = error.config?.url;
+    const method = error.config?.method?.toUpperCase();
+    const serverMessage = error.response?.data?.message;
+
+    console.error(
+      `[API] ${method} ${url} failed — status: ${status ?? 'NO_RESPONSE'} | message: ${serverMessage ?? error.message}`
+    );
+
+    if (error.response?.data) {
+      return Promise.reject(error.response.data);
+    }
+
+    return Promise.reject({ success: false, message: error.message || 'Network error — check your connection' });
+  }
 );
 
 export default apiClient;

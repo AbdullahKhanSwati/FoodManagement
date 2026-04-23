@@ -30,6 +30,7 @@ function SafeFoodDetailScreen({ navigation, route }) {
   const { foodId, food: initialFood } = route.params;
   const [food, setFood] = useState(initialFood || null);
   const [loading, setLoading] = useState(!initialFood);
+  const [error, setError] = useState(null);
   const [deleting, setDeleting] = useState(false);
 
   useFocusEffect(
@@ -38,16 +39,15 @@ function SafeFoodDetailScreen({ navigation, route }) {
       const fetchFood = async () => {
         if (!foodId) return;
         try {
+          setError(null);
           const result = await getSafeFoodById(foodId);
           if (isActive && result.success) {
             setFood(result.data);
           }
-        } catch (error) {
-          console.log('Failed to refresh food details', error);
+        } catch (err) {
+          if (isActive) setError(err.message || 'Failed to load food details');
         } finally {
-          if (isActive) {
-            setLoading(false);
-          }
+          if (isActive) setLoading(false);
         }
       };
       fetchFood();
@@ -95,12 +95,12 @@ function SafeFoodDetailScreen({ navigation, route }) {
     );
   }
 
-  if (!food) {
+  if (error || !food) {
     return (
       <View style={styles.container}>
         <Header title="Food Details" showBack={true} onBackPress={() => navigation.goBack()} />
         <View style={styles.centerContainer}>
-          <Text style={styles.errorText}>Food details not found.</Text>
+          <Text style={styles.errorText}>{error || 'Food details not found.'}</Text>
         </View>
       </View>
     );
