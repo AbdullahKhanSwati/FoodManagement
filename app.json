@@ -14,7 +14,7 @@
     ],
     "ios": {
       "supportsTabletMode": true,
-      "bundleIdentifier": "com.foodsupport.app"
+      "bundleIdentifier": "com.calmingcompass.easyeats"
     },
     "android": {
       "usesCleartextTraffic": true,
@@ -22,11 +22,10 @@
         "foregroundImage": "./assets/adaptive-icon.jpeg",
         "backgroundColor": "#F7FBF8"
       },
-      "package": "com.foodsupport.app"
+      "package": "com.calmingcompass.easyeats",
+      "versionCode": 1
     },
-    "web": {
-      
-    },
+    "web": {},
     "plugins": [
       [
         "expo-splash-screen",
@@ -40,9 +39,9 @@
     ],
     "extra": {
       "eas": {
-        "projectId": "69340f88-1927-4449-b04a-6e9c95c35655"
+        "projectId": "c8b75e3d-2a24-4ac8-b950-402482e650da"
       }
     },
-    "owner": "abdullah_khan_swati"
+    "owner": "abdullahg144"
   }
 }
